@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="webjars/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="js/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <script type="text/javascript" src="js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="css/uniform.css" />
+    <link rel="stylesheet" href="css/select2.css" />
+    <link rel="stylesheet" href="css/matrix-style.css" />
+    <link rel="stylesheet" href="css/matrix-media.css" />
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>-->
+
+    <script src="js/bootstrap-table.js"></script>
+    <script src="js/bootstrap-table-zh-CN.js"></script>
+    <script src="js/bootstrap-table-custom.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-table.css" />
+    <script src="js/app.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tb').bootstrapTable({
+                url: '/getTcs',         //请求后台的URL（*）
+                method: 'post', //请求方式（*）
+                contentType: "application/x-www-form-urlencoded",//当请求方法为post的时候,必须要有！！！！
+                striped:'true',
+                pagination: true,  //是否显示分页（*）
+                paginationLoop: true,
+                paginationHAlign: 'right', //right, left
+                paginationVAlign: 'bottom', //bottom, top, both
+                paginationDetailHAlign: 'left', //right, left
+                paginationPreText: ' 上一页',
+                paginationNextText: '下一页',
+                // showRefresh:'true',
+                // search:'true',
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                pageNumber: 1,//如果设置了分页，首页页码
+                // showPaginationSwitch:true,//是否显示 数据条数选择框
+                pageSize: 10,//如果设置了分页，页面数据条数
+                pageList: [5, 10, 20, 40],
+                sidePagination: "server",
+                dataField: 'content',
+                totalField: 'totalElements',
+                queryParams: function (params) {//自定义参数，这里的参数是传给后台的，我这是是分页用的
+                    return {//这里的params是table提供的
+                        cp: (params.offset/params.limit),//从数据库第几条记录开始
+                        ps: params.limit,//找多少条
+                        tableName: $("#tableName").val(),//找多少条
+                        searchContent: $("#searchContent").val()
+                    };
+                },
+                columns: [{
+                    field: 'tcmc',
+                    width: '15%',
+                    title: '图层名',
+                    formatter:tableNameFormatter
+                }, {
+                    field: 'dl',
+                    width: '15%',
+                    title: '所属大类'
+                }, {
+                    field: 'ysmc',
+                    width: '30%',
+                    title: '映射名称'
+                }, {
+                    field: 'tcxx',
+                    title: '图层信息'
+                } ]
+            });
+        });
+
+        function tableNameFormatter(value, row, index) {
+            return "<a href='viewTable?ysmc=" + row.ysmc + "' style='color: #27a9e3'>" + value + "</a>";
+        }
+
+    </script>
+    <meta charset="UTF-8">
+    <title>PGIS 数据字典</title>
+</head>
+<body>
+<div style="background: #0e0e0e;height: 55px;margin-top: -20px">
+    <h2><img src="img/logo.jpg" style="width: 40px;height: 40px;margin-left: 15px;margin-top: 5px"><a href="#" style="margin-left: 10px;margin-top: 5px">PGIS</a></h2>
+</div>
+
+
+<div id="sidebar"> <a href="#" class="visible-phone"><i class="icon icon-th"></i>数据表格</a>
+    <ul>
+        <li ><a href="#"><i class="icon icon-home"></i> <span>首页</span></a> </li>
+        <li class="active"><a href="/"><i class="icon icon-th"></i> <span>数据表信息查询</span></a></li>
+        <li><a href="/listField"><i class="icon icon-th"></i> <span>字段信息查询</span></a></li>
+
+
+    </ul>
+</div>
+
+
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb"> <a href="#" title="Go to Home" class="tip-bottom"><i class="icon-th"></i> PGIS数据信息</a> </div>
+        <h1>数据表清单</h1>
+    </div>
+    <div class="container-fluid">
+        <form class="form-horizontal" method="post" action="#" name="basic_validate" id="basic_validate" novalidate="novalidate">
+            <div class="control-group">
+                <div class="controls-row">
+                    <label class="control-label" style="width: 150px;">图层名:</label>
+                    <input type="text" id="tableName" class="table-filter" style="margin-left: 10px;margin-top: 10px;width: 20%;height: 30px"  placeholder="图层名" />
+
+                    <label class="control-label" style="width: 150px;">图层信息:</label>
+                    <input type="text" id="searchContent" class="table-filter"  style="margin-left: 10px;margin-top: 10px;width: 20%;height: 30px"   placeholder="图层信息" />
+                    <div class="pull-right" style="margin-right: 80px;margin-top:10px;">
+                        <input type="button"  value="搜索" onclick="reloadTableFilters('tb')" class="btn btn-primary">
+                        <input type="button"  value="重置" onclick="clearTableFilters('tb')" class="btn btn-inverse">
+                    </div>
+                </div>
+
+            </div>
+
+
+        </form>
+        <hr>
+        <table id="tb" name="tb"></table>
+    </div>
+</div>
+
+</body>
+</html>
+

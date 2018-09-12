@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="webjars/jquery/3.1.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="css/uniform.css" />
+    <link rel="stylesheet" href="css/select2.css" />
+    <link rel="stylesheet" href="css/matrix-style.css" />
+    <link rel="stylesheet" href="css/matrix-media.css" />
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>-->
+
+    <script src="js/bootstrap-table.js"></script>
+    <script src="js/bootstrap-table-zh-CN.js"></script>
+    <script src="js/bootstrap-table-custom.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-table.css" />
+    <script src="js/app.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var tableName = getParams().ysmc;
+            $.get("/tcDetail?ysmc="+tableName, function(result){
+                $("#tableName").html(result.tcmc);
+                $("#sszl").html(result.ysmc);
+                $("#tableContent").html(result.tcxx);
+            });
+
+            $('#tb').bootstrapTable({
+                url: '/getTcFields?ysmc='+tableName,         //请求后台的URL（*）
+                method: 'post', //请求方式（*）
+                contentType: "application/x-www-form-urlencoded",//当请求方法为post的时候,必须要有！！！！
+                striped:'true',
+                showRefresh:'true',
+                search:'true',
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",//排序方式
+                pagination:true,
+                paginationLoop:true,
+                pageNumber: 1,//如果设置了分页，首页页码
+                // showPaginationSwitch:true,//是否显示 数据条数选择框
+                pageSize: 15,//如果设置了分页，页面数据条数
+                pageList: [10,15, 20, 40],
+                sidePagination: "client",
+                dataField: 'content',
+                totalField: 'totalElements',
+                columns: [{
+                    field: 'columnName',
+                    width: '15%',
+                    title: '字段名',
+
+                },{
+                    field: 'dataType',
+                    width: '15%',
+                    title: '数据类型',
+
+                },{
+                    field: 'dataLength',
+                    width: '15%',
+                    title: '数据长度',
+
+                }, {
+                    field: 'content',
+                    width: '30%',
+                    title: '属性名称'
+                }, {
+                    field: 'sszl',
+                    title: '所属大类'
+                } ]
+            });
+        });
+
+    </script>
+    <meta charset="UTF-8">
+    <title>PGIS 数据字典</title>
+</head>
+<body>
+<div style="background: #0e0e0e;height: 55px;margin-top: -20px">
+    <h2><img src="img/logo.jpg" style="width: 40px;height: 40px;margin-left: 15px;margin-top: 5px"><a href="#" style="margin-left: 10px;margin-top: 5px">PGIS</a></h2>
+</div>
+
+<div id="sidebar"> <a href="#" class="visible-phone"><i class="icon icon-th"></i>图层详细信息</a>
+    <ul>
+        <!--<li ><a href="#"><i class="icon icon-home"></i> <span>首页</span></a> </li>-->
+        <li class="active"><a href="/"><i class="icon icon-th"></i> <span>图层信息查询</span></a></li>
+        <li><a href="/listField"><i class="icon icon-th"></i> <span>字段信息查询</span></a></li>
+
+    </ul>
+</div>
+
+
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb"> <a href="#" title="Go to Home" class="tip-bottom"><i class="icon-th"></i> 图层信息查询</a> <a href="#" class="current">图层详细信息</a> </div>
+        <h1>图层详细信息</h1>
+    </div>
+    <div class="container-fluid">
+        <form class="form-horizontal" method="post" action="#" name="basic_validate" id="basic_validate" novalidate="novalidate">
+            <div class="control-group">
+                <div class="controls-row">
+                    <label class="control-label" style="width: 120px;"><strong>图层名称:</strong></label>
+                    <label class="control-label" id="tableName" style="width: 180px;margin-left:15px;text-align: left"></label>
+
+                    <label class="control-label" style="width: 120px;"><strong>映射名称:</strong></label>
+                    <label class="control-label" id="sszl" style="width: 60%;margin-left:15px;text-align: left"></label>
+
+                </div>
+
+                <div class="controls-row" >
+                    <label class="control-label" style="width: 120px;vertical-align:top"><strong>图层信息:</strong></label>
+                    <label class="control-label" id="tableContent" style="width: 80%;margin-left:15px;text-align: left"></label>
+                </div>
+
+            </div>
+
+
+        </form>
+        <hr>
+        <table id="tb" name="tb"></table>
+    </div>
+</div>
+
+</body>
+</html>
+

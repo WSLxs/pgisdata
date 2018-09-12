@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="webjars/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="js/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <script type="text/javascript" src="js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+
+
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css"/>
+    <link rel="stylesheet" href="css/uniform.css"/>
+    <link rel="stylesheet" href="css/select2.css"/>
+    <link rel="stylesheet" href="css/matrix-style.css"/>
+    <link rel="stylesheet" href="css/matrix-media.css"/>
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>-->
+
+    <style type="text/css">
+
+    </style>
+
+    <script src="js/bootstrap-table.js"></script>
+    <script src="js/bootstrap-table-zh-CN.js"></script>
+    <script src="js/bootstrap-table-custom.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-table.css"/>
+    <script src="js/app.js"></script>
+
+    <!--可编辑表格-->
+    <link rel="stylesheet" href="css/bootstrap-editable.css"/>
+    <script src="js/bootstrap-editable.js"></script>
+    <script src="js/bootstrap-table-editable.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tb').bootstrapTable({
+                url: '/getAllFields',         //请求后台的URL（*）
+                method: 'post', //请求方式（*）
+                contentType: "application/x-www-form-urlencoded",//当请求方法为post的时候,必须要有！！！！
+                striped: 'true',
+                pagination: true,  //是否显示分页（*）
+                paginationLoop: true,
+                paginationHAlign: 'right', //right, left
+                paginationVAlign: 'bottom', //bottom, top, both
+                paginationDetailHAlign: 'left', //right, left
+                paginationPreText: ' 上一页',
+                paginationNextText: '下一页',
+                showRefresh:'true',
+                search:'true',
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                pageNumber: 1,//如果设置了分页，首页页码
+                // showPaginationSwitch:true,//是否显示 数据条数选择框
+                pageSize: 10,//如果设置了分页，页面数据条数
+                pageList: [5, 10, 20, 40],
+                sidePagination: "client",
+                dataField: 'content',
+                totalField: 'totalElements',
+                toolbar:"#toolbar",
+                columns: [{
+                    title: '全选',
+                    field: 'select',
+                    //复选框
+                    checkbox: true,
+                    width: 25,
+                    align: 'center',
+                    valign: 'middle'
+                }, {
+                    field: 'zdmc',
+                    width: '15%',
+                    title: '字段名',
+                    editable: {
+                        type: 'text',
+                        title: '字段名',
+                        validate: function (v) {
+                            if (!v) return '输入不能为空';
+                        }
+                    }
+                }, {
+                    field: 'zdlx',
+                    width: '15%',
+                    title: '数据类型',
+                    editable: {
+                        type: 'text',
+                        title: '数据类型',
+                        validate: function (v) {
+                            if (!v) return '输入不能为空';
+                        }
+                    }
+                }, {
+                    field: 'zddx',
+                    width: '15%',
+                    title: '数据长度',
+                    editable: {
+                        type: 'number',
+                        title: '数据长度',
+                        validate: function (v) {
+                            if (!v) return '输入不能为空';
+                        }
+                    }
+                }, {
+                    field: 'sxmc',
+                    width: '15%',
+                    title: '属性名称',
+                    editable: {
+                        type: 'text',
+                        title: '属性名称',
+                        validate: function (v) {
+                            if (!v) return '输入不能为空';
+                        }
+                    }
+                }, {
+                    field: 'ssdl',
+                    width: '15%',
+                    title: '所属大类',
+                    editable: {
+                        type: 'text',
+                        title: '所属大类',
+                        validate: function (v) {
+                            if (!v) return '输入不能为空';
+                        }
+                    }
+                }, {
+                    field: 'sszl',
+                    title: '所属中类',
+                    editable: {
+                        type: 'text',
+                        title: '所属中类',
+                        validate: function (v) {
+                            if (!v) return '输入不能为空';
+                        }
+                    }
+                }],
+                //保存的使用
+                onEditableSave: function (field, row, oldValue, $el) {
+                    //可进行异步操作
+                    $.ajax({
+                        type: "post",
+                        url: "/editFieldInfo",
+                        data: row,
+                        dataType: 'text',
+                        success: function (data) {
+                            if (data == "success") {
+                                clearTableFilters('tb');
+                            }
+                        },
+                        error: function () {
+                            clearTableFilters('tb')
+                            alert("修改失败");
+                        },
+                        complete: function () {
+
+                        }
+
+                    });
+                }
+            });
+        });
+
+        function tableNameFormatter(value, row, index) {
+            return "<a href='viewTc?ysmc=" + row.ysmc + "' style='color: #27a9e3'>" + value + "</a>";
+        }
+
+
+        function removeItem() {
+
+            var selectedItems = $("#tb").bootstrapTable("getSelections");
+            if (selectedItems.length > 0) {
+                var ids = [];
+                $.each(selectedItems, function (index, item) {
+                    ids.push(item.zdmc);
+                });
+                $.ajax({
+                    url: '/deleteField',
+                    type: 'post',
+                    traditional: true,
+                    data: {fieldZdmc: ids},
+                    success: function (result) {
+                        if (result=='success') {
+                            alert("删除成功！");
+                            $("#tb").bootstrapTable("refresh");
+                        } else {
+                            alert("删除失败!");
+                        }
+                    }
+                });
+
+            } else {
+                alert("请选择数据！");
+            }
+        }
+
+        function editItem() {
+            var selectedItems = $("#tb").bootstrapTable("getSelections");
+            if (selectedItems.length > 0) {
+                $("#zdmc").val(selectedItems[0].zdmc);
+                $("#sxmc").val(selectedItems[0].sxmc);
+                $("#sszl").val(selectedItems[0].sszl);
+                $("#ssdl").val(selectedItems[0].ssdl);
+                $("#zddx").val(selectedItems[0].zddx);
+                $("#zdlx").val(selectedItems[0].zdlx);
+                $("#sfbx").val(selectedItems[0].sfbx);
+                $("#Id").val(selectedItems[0].id);
+                $("#myModal").modal();
+            } else {
+                alert("请选择数据！");
+            }
+        }
+
+        function addItem() {
+            $("#zdmc").val("");
+            $("#sxmc").val("");
+            $("#sszl").val("");
+            $("#ssdl").val("");
+            $("#zddx").val("");
+            $("#zdlx").val("");
+            $("#sfbx").val("");
+            $("#Id").val("");
+            $("#myModal").modal();
+        }
+        
+        function check() {
+            if($("#tableForm").valid()){
+                return true;
+            }else {
+                return false;
+            }
+        }
+
+    </script>
+    <meta charset="UTF-8">
+    <title>PGIS 数据字典</title>
+</head>
+<body>
+<div style="background: #0e0e0e;height: 55px;margin-top: -20px">
+    <h2><img src="img/logo.jpg" style="width: 40px;height: 40px;margin-left: 15px;margin-top: 5px"><a href="#" style="margin-left: 10px;margin-top: 5px">PGIS</a></h2>
+</div>
+
+<div id="sidebar"><a href="#" class="visible-phone"><i class="icon icon-th"></i>字段信息维护</a>
+    <ul>
+        <!--<li><a href="#"><i class="icon icon-home"></i> <span>首页</span></a></li>-->
+        <li><a href="#"><i class="icon icon-signal"></i> <span>数据统计</span></a></li>
+        <li ><a href="/editTc"><i class="icon icon-inbox"></i> <span>图层信息维护</span></a></li>
+        <li class="active"><a href="/editField"><i class="icon icon-inbox"></i> <span>字段信息维护</span></a></li>
+
+    </ul>
+</div>
+
+
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-inbox"></i> 字段信息维护</a></div>
+        <h1>字段信息维护</h1>
+    </div>
+    <div class="container-fluid">
+        <hr>
+        <div id="toolbar" style="margin-bottom: 5px;display: inline">
+            <div class="btn-group">
+                <button class="btn btn-default" onclick="addItem();">
+                    <i class="glyphicon glyphicon-plus"></i>
+                </button>
+                <button class="btn btn-default" onclick="editItem();">
+                    <i class="glyphicon glyphicon-edit"></i>
+                </button>
+                <button class="btn btn-default" onclick="removeItem();">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </button>
+            </div>
+        </div>
+        <table id="tb" name="tb"></table>
+
+    </div>
+</div>
+
+
+<!-- Modal add -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <form class="form-horizontal" id="tableForm" role="form" action="/saveField" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">字段信息单</h4>
+                </div>
+                <input type="hidden" class="form-control" name="Id" id="Id" placeholder="">
+                <div class="form-group" style="margin-top: 10px">
+                    <label for="zdmc" class="col-sm-2 control-label">字段名：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="zdmc" id="zdmc" placeholder="请输入字段名" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="zdlx" class="col-sm-2 control-label">字段类型：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="zdlx" id="zdlx" placeholder="请输入字段类型" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="zddx" class="col-sm-2 control-label">字段大小：</label>
+                    <div class="col-sm-5">
+                        <input type="number" class="form-control" name="zddx" id="zddx" placeholder="请输入字段大小" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="sxmc" class="col-sm-2 control-label">属性名称：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="sxmc" id="sxmc" placeholder="请输入属性名称" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="ssdl" class="col-sm-2 control-label">所属大类：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="ssdl" id="ssdl" placeholder="请输入大类" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="sszl" class="col-sm-2 control-label">所属中类：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="sszl" id="sszl" placeholder="请输入中类" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="sfbx" class="col-sm-2 control-label">是否必选：</label>
+                    <div class="col-sm-5">
+                        <select  class="form-control" name="sfbx" id="sfbx">
+                            <option value="是" selected = "selected" >是</option>
+                            <option value="否">否</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-footer">
+                        <button type="submit" onsubmit="return check()" class="btn btn-primary">保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+</body>
+</html>
+

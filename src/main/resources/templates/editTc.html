@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="webjars/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="js/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <script type="text/javascript" src="js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+
+
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css"/>
+    <link rel="stylesheet" href="css/uniform.css"/>
+    <link rel="stylesheet" href="css/select2.css"/>
+    <link rel="stylesheet" href="css/matrix-style.css"/>
+    <link rel="stylesheet" href="css/matrix-media.css"/>
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>-->
+
+    <style type="text/css">
+
+    </style>
+
+    <script src="js/bootstrap-table.js"></script>
+    <script src="js/bootstrap-table-zh-CN.js"></script>
+    <script src="js/bootstrap-table-custom.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-table.css"/>
+    <script src="js/app.js"></script>
+
+    <!--可编辑表格-->
+    <link rel="stylesheet" href="css/bootstrap-editable.css"/>
+    <script src="js/bootstrap-editable.js"></script>
+    <script src="js/bootstrap-table-editable.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tb').bootstrapTable({
+                url: '/getTcs',         //请求后台的URL（*）
+                method: 'post', //请求方式（*）
+                contentType: "application/x-www-form-urlencoded",//当请求方法为post的时候,必须要有！！！！
+                striped: 'true',
+                pagination: true,  //是否显示分页（*）
+                paginationLoop: true,
+                paginationHAlign: 'right', //right, left
+                paginationVAlign: 'bottom', //bottom, top, both
+                paginationDetailHAlign: 'left', //right, left
+                paginationPreText: ' 上一页',
+                paginationNextText: '下一页',
+                // showRefresh:'true',
+                // search:'true',
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                pageNumber: 1,//如果设置了分页，首页页码
+                // showPaginationSwitch:true,//是否显示 数据条数选择框
+                pageSize: 10,//如果设置了分页，页面数据条数
+                pageList: [5, 10, 20, 40],
+                sidePagination: "server",
+                dataField: 'content',
+                totalField: 'totalElements',
+                toolbar:"#toolbar",
+                queryParams: function (params) {//自定义参数，这里的参数是传给后台的，我这是是分页用的
+                    return {//这里的params是table提供的
+                        cp: (params.offset / params.limit),//从数据库第几条记录开始
+                        ps: params.limit,//找多少条
+                        tableName: $("#tableName").val(),//找多少条
+                        searchContent: $("#searchContent").val()
+                    };
+                },
+                columns: [{
+                    title: '全选',
+                    field: 'select',
+                    //复选框
+                    checkbox: true,
+                    width: 25,
+                    align: 'center',
+                    valign: 'middle'
+                }, {
+                    field: 'tcmc',
+                    width: '15%',
+                    title: '图层名',
+                    formatter: tableNameFormatter
+                }, {
+                    field: 'dl',
+                    width: '15%',
+                    title: '所属大类',
+                    editable: {
+                        type: 'text',
+                        title: '所属大类',
+                        validate: function (v) {
+                            if (!v) return '输入不能为空';
+                        }
+                    }
+                }, {
+                    field: 'ysmc',
+                    width: '20%',
+                    title: '映射名称',
+                    editable: {
+                        type: 'text',
+                        title: '所属大类',
+                        validate: function (v) {
+                            if (!v) return '输入不能为空';
+                        }
+                    }
+                }, {
+                    field: 'tcxx',
+                    title: '图层信息',
+                    editable: {
+                        type: 'text',
+                        title: '所属大类',
+                        validate: function (v) {
+                            if (!v) return '输入不能为空';
+                        }
+                    }
+                }],
+                //保存的使用
+                onEditableSave: function (field, row, oldValue, $el) {
+                    //可进行异步操作
+                    $.ajax({
+                        type: "post",
+                        url: "/editTcInfo",
+                        data: row,
+                        dataType: 'text',
+                        success: function (data) {
+                            if (data == "success") {
+                                clearTableFilters('tb');
+                            }
+                        },
+                        error: function () {
+                            clearTableFilters('tb')
+                            alert("修改失败");
+                        },
+                        complete: function () {
+
+                        }
+
+                    });
+                }
+            });
+        });
+
+        function tableNameFormatter(value, row, index) {
+            return "<a href='viewTc?ysmc=" + row.ysmc + "' style='color: #27a9e3'>" + value + "</a>";
+        }
+
+
+        function removeItem() {
+
+            var selectedItems = $("#tb").bootstrapTable("getSelections");
+            if (selectedItems.length > 0) {
+                var ids = [];
+                $.each(selectedItems, function (index, item) {
+                    ids.push(item.ysmc);
+                });
+                $.ajax({
+                    url: '/deleteTable',
+                    type: 'post',
+                    traditional: true,
+                    data: {tableId: ids},
+                    success: function (result) {
+                        if (result=='success') {
+                            alert("删除成功！");
+                            $("#tb").bootstrapTable("refresh");
+                        } else {
+                            alert("删除失败!");
+                        }
+                    }
+                });
+
+            } else {
+                alert("请选择数据！");
+            }
+        }
+
+        function editItem() {
+            var selectedItems = $("#tb").bootstrapTable("getSelections");
+            if (selectedItems.length > 0) {
+                $("#tcmc").val(selectedItems[0].tcmc);
+                $("#ysmc").val(selectedItems[0].ysmc);
+                $("#tcxx").val(selectedItems[0].tcxx);
+                $("#kjtp").val(selectedItems[0].kjtp);
+                $("#cdm").val(selectedItems[0].cdm);
+                $("#dl").val(selectedItems[0].dl);
+                $("#Id").val(selectedItems[0].id);
+                $("#myModal").modal();
+            } else {
+                alert("请选择数据！");
+            }
+        }
+
+        function addItem() {
+            $("#tcmc").val("");
+            $("#ysmc").val("");
+            $("#tcxx").val("");
+            $("#kjtp").val("");
+            $("#cdm").val("");
+            $("#dl").val("");
+            $("#Id").val("");
+            $("#myModal").modal();
+        }
+
+        function check() {
+            if($("#tableForm").valid()){
+                return true;
+            }else {
+                return false;
+            }
+        }
+
+    </script>
+    <meta charset="UTF-8">
+    <title>PGIS 数据字典</title>
+</head>
+<body>
+<div style="background: #0e0e0e;height: 55px;margin-top: -20px">
+    <h2><img src="img/logo.jpg" style="width: 40px;height: 40px;margin-left: 15px;margin-top: 5px"><a href="#" style="margin-left: 10px;margin-top: 5px">PGIS</a></h2>
+</div>
+
+<div id="sidebar"><a href="#" class="visible-phone"><i class="icon icon-th"></i>图层信息维护</a>
+    <ul>
+        <!--<li><a href="#"><i class="icon icon-home"></i> <span>首页</span></a></li>-->
+        <li><a href="#"><i class="icon icon-signal"></i> <span>数据统计</span></a></li>
+        <li class="active"><a href="/editTc"><i class="icon icon-inbox"></i> <span>图层信息维护</span></a></li>
+        <li><a href="/editField"><i class="icon icon-inbox"></i> <span>字段信息维护</span></a></li>
+
+    </ul>
+</div>
+
+
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-inbox"></i> 图层信息维护</a></div>
+        <h1>图层信息维护</h1>
+    </div>
+    <div class="container-fluid">
+        <form class="form-horizontal" method="post" action="#" name="basic_validate" novalidate="novalidate">
+            <div class="control-group">
+                <div class="controls-row">
+                    <label class="control-label" style="width: 150px;">图层名:</label>
+                    <input type="text" id="tableName" class="table-filter" style="margin-left: 10px;margin-top: 10px;width: 20%;height: 30px" placeholder="图层名"/>
+
+                    <label class="control-label" style="width: 150px;">数据信息:</label>
+                    <input type="text" id="searchContent" class="table-filter" style="margin-left: 10px;margin-top: 10px;width: 20%;height: 30px" placeholder="数据信息"/>
+                    <div class="pull-right" style="margin-right: 80px;margin-top:10px;">
+                        <input type="button" value="搜索" onclick="reloadTableFilters('tb')" class="btn btn-primary">
+                        <input type="button" value="重置" onclick="clearTableFilters('tb')" class="btn btn-default">
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+
+        <hr>
+        <div id="toolbar" style="margin-bottom: 5px">
+            <div class="btn-group">
+                <button class="btn btn-default" onclick="addItem();">
+                    <i class="glyphicon glyphicon-plus"></i>
+                </button>
+                <button class="btn btn-default" onclick="editItem();">
+                    <i class="glyphicon glyphicon-edit"></i>
+                </button>
+                <button class="btn btn-default" onclick="removeItem();">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </button>
+            </div>
+        </div>
+        <table id="tb" name="tb"></table>
+
+    </div>
+</div>
+
+
+<!-- Modal add -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <form class="form-horizontal" id="tableForm" role="form" action="/saveTable" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">图层信息单</h4>
+                </div>
+                <input type="hidden" class="form-control" name="Id" id="Id" placeholder="请输入表名" required>
+                <div class="form-group" style="margin-top: 10px">
+                    <label for="tcmc" class="col-sm-2 control-label">表名：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="tcmc" id="tcmc" placeholder="请输入表名" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="ysmc" class="col-sm-2 control-label">映射名称：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="ysmc" id="ysmc" placeholder="请输入映射名称" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cdm" class="col-sm-2 control-label">CDM：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="cdm" id="cdm" placeholder="请输入CDM">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="kjtp" class="col-sm-2 control-label">KJTP：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="kjtp" id="kjtp" placeholder="请输入KJTP" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dl" class="col-sm-2 control-label">所属大类：</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="dl" id="dl" placeholder="请输入大类" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tcxx" class="col-sm-2 control-label" >图层信息：</label>
+                    <div class="col-sm-5">
+                        <textarea type="text" class="form-control" name="tcxx" id="tcxx" placeholder="请输入图层信息" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary"  onsubmit="return check()">保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+</body>
+</html>
+
