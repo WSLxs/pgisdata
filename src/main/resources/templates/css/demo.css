@@ -1,0 +1,341 @@
+body, html, #mapDiv {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+}
+
+p, body, html, h1, ul, li {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style: none;
+}
+
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.main {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    padding: 10px 10px 0;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.main aside {
+    position: fixed;
+    top: 3px;
+    left: 5px;
+    width: 245px;
+    margin-right: 0px;
+    height: 100%;
+    z-index: 999;
+    background: rgba(255, 255, 255, 0);
+}
+
+.main section{
+    position: fixed;
+    top: 3px;
+    left: 255px;
+    width:  calc(100% - 255px);
+    height: 99%;
+    border: 1px solid #ccc;
+}
+
+.tip {
+    border: 1px solid #ccc;
+    marin-bottom: 10px;
+    padding: 5px 20px;
+    height: 120px;
+    background: rgba(240,240,240, .8);
+    border-radius: 4px;
+}
+
+.dayNum {
+    margin-bottom: 8px;
+}
+
+.hour {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+}
+
+.dayNum p {
+    font-size: 12px;
+}
+
+.dayNum .number {
+    color: #0480be;
+    font-size: 50px;
+    text-align: center;
+    margin-bottom: -16px;
+}
+
+.minute p, .minute2 p {
+    color: #333;
+    margin-right: 5px;
+    font-weight: normal;
+    font-size: 10px;
+}
+
+.minute span, .minute2 span {
+    color: #0480be;
+    font-size: 15px;
+}
+
+.searchAside {
+    border: 1px solid #ccc;
+    border-bottom: none;
+    margin: 10px 0;
+    padding: 10px;
+    height: 50px;
+    /*overflow: auto;*/
+    background: rgba(240,240,240, .8);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.treeList {
+    border: 1px solid #ccc;
+    border-top: none;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    padding: 2px 10px 5px 10px;
+    height: calc(100% - 360px);
+    overflow: auto;
+    background: rgba(240,240,240, .8);
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+
+
+.searchGroup {
+    position: relative;
+}
+
+.input-group {
+    width: 100%;
+}
+
+.form-control {
+    position:fixed;
+    padding-right: 24px;
+}
+
+.searchIcon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 99;
+    color: #0480be;
+    cursor: pointer;
+}
+
+.clearInput {
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 30px;
+    font-size: 15px;
+    z-index: 99;
+    transform: rotate(45deg);
+    cursor: pointer;
+}
+
+.list {
+    margin-top: 10px;
+}
+
+.tableMain {
+    height: 145px;
+    border-radius: 4px;
+}
+
+.listHeader {
+    background: #0480be;
+    color: #fff;
+    padding-left: 10px;
+    font-size: 16px;
+    height: 30px;
+    line-height: 30px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.tableList {
+    border: 1px solid #ccc;
+    height: 90%;
+    overflow: auto;
+    padding: 10px;
+    background: rgba(240,240,240, .8);
+}
+
+.tableList table {
+    border: 1px solid #ccc;
+    font-size: 10px;
+}
+
+.tableList table span {
+    cursor: pointer;
+}
+
+.loginBar {
+    position: fixed;
+    top: 7px;
+    right: 6px;
+    background: rgba(4, 128, 190, .8);
+    display: flex;
+    display: -webkit-flex;
+    z-index: 999;
+    border-radius: 4px;
+}
+
+.funIconList span {
+    color: #fff;
+    line-height: 40px;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.loginBar .userName, .loginBar .layout {
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+}
+
+
+.history {
+    /*display: none;*/
+    position: fixed;
+    top: 6px;
+    left: 258px;
+    padding: 0 0 0 0;
+    border: 1px solid #ccc;
+    z-index: 999;
+    background: rgba(240,240,240, .8);
+    border-radius: 4px;
+}
+
+.history h1 {
+    position: relative;
+    font-size: 15px;
+    text-align: center;
+    background: #0480be;
+    color: #fff;
+    height: 30px;
+    line-height: 30px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+
+}
+
+.date {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-on {
+    height: 40px !important;
+    width: 50px !important;
+    margin-left: 3px !important;
+    margin-right: 5px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.history input {
+    display: block;
+    height: 25px;
+    width: 180px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+.history button {
+    height: 50px !important;
+    width: 10px;
+    display: inline;
+}
+
+.history .historyControl {
+    position: relative;
+    font-size: 15px;
+    text-align: center;
+    padding: 5px 0;
+}
+
+.historyControl span {
+    vertical-align: top;
+}
+
+.historyControl span p {
+    font-size: 10px;
+}
+
+.closeHistory {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    padding: 0 !important;
+}
+
+.history span {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.searchList {
+    position: absolute;
+    top: 34px;
+    max-height: 400px;
+    overflow: auto;
+    z-index: 100;
+    width: 99%;
+    background: #fff;
+    box-shadow: 0px 0 5px #ccc;
+}
+
+.searchList li {
+    height: 55px;
+    line-height: 25px;
+    text-align: left;
+    border-bottom: none;
+    cursor: pointer;
+    margin-left: 12px;
+}
+
+.searchList i {
+    margin-right: 8px;
+}
+
+.searchList span {
+    display: block;
+    height: auto;
+}
+.searchList p {
+    font-size: 10px;
+    margin-top: -10px;
+    margin-left: 23px;
+}
+
+.treeview span.icon {
+    color: #0480be;
+}
+
+.list-group-item {
+    font-size: 10px;
+    padding: 5px 15px;
+}
+

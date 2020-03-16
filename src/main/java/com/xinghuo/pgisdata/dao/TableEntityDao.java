@@ -11,4 +11,5 @@ public interface TableEntityDao extends JpaRepository<TableEntity,Integer>,JpaSp
      TableEntity findTopByYsmc(String tableName);
 
 
+     int  getIn(String in);
 }

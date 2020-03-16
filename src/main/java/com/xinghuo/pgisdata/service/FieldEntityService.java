@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -72,9 +73,9 @@ public class FieldEntityService {
         return fieldEntityDao.findTopByZdmc(zdmc);
     }
 
-    public List<FieldEntity> getAllFields() throws Exception {
+    public List<FieldEntityVO> getAllFields() throws Exception {
         //查出表中含有的所有字段
-        List<FieldEntity> fieldEntities = fieldEntityDao.findAll();
+        List<FieldEntityVO> fieldEntities = fieldEntityDao.getAllUseZDMC("B_M_A");
         return fieldEntities;
     }
 

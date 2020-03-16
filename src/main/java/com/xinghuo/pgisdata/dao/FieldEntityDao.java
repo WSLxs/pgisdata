@@ -1,5 +1,6 @@
 package com.xinghuo.pgisdata.dao;
 
+import com.xinghuo.pgisdata.VO.FieldEntityVO;
 import com.xinghuo.pgisdata.entity.FieldEntity;
 import com.xinghuo.pgisdata.entity.FieldEntity1;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,6 @@ public interface FieldEntityDao extends JpaRepository<FieldEntity,Integer>,JpaSp
 
 
     FieldEntity findTopByZdmc(String zdmc);
+
+    List<FieldEntityVO> getAllUseZDMC(String zdmc);
 }

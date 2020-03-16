@@ -2,6 +2,7 @@ package com.xinghuo.pgisdata.controller;
 
 import com.xinghuo.pgisdata.VO.FieldEntityVO;
 import com.xinghuo.pgisdata.entity.FieldEntity;
+import com.xinghuo.pgisdata.entity.StatisticForm;
 import com.xinghuo.pgisdata.entity.TableEntity;
 import com.xinghuo.pgisdata.entity.TableEntity1;
 import com.xinghuo.pgisdata.service.FieldEntityService;
@@ -68,6 +69,12 @@ public class MainController {
     public String viewTc(@RequestParam(value = "ysmc", defaultValue = "") String tableName) {
 
         return "tcDetail";
+    }
+
+    @RequestMapping("/statisticalData")
+    public String statisticalData() {
+
+        return "statisticalData";
     }
     /**
      * 保存Table对象
@@ -224,6 +231,7 @@ public class MainController {
 //                        Predicate p2 = cb.like(root.get("ysmc").as(String.class), "%" + searchContent + "%");
 //                        list.add(p2);
 //                    }
+
                     return cb.and(list.toArray(new Predicate[0]));
                 }
             };
@@ -256,11 +264,16 @@ public class MainController {
 
     @RequestMapping("/getAllFields")
     @ResponseBody
-    public List<FieldEntity> getAllFields() throws Exception {
+    public List<FieldEntityVO> getAllFields() throws Exception {
 
         return fieldEntityService.getAllFields();
     }
 
-
+    @RequestMapping("/statistic")
+    @ResponseBody
+    public String statistic(StatisticForm statisticForm) {
+//        tableEntityService.updateTable(statisticForm);
+        return "success";
+    }
 
 }

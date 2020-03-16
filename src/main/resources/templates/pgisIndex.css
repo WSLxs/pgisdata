@@ -1,0 +1,25 @@
+body{
+    margin:0;
+}
+
+.header{
+    position: relative;
+    background-color: #0e90d2;
+    height:150px;
+    min-width: 1000px;
+    width: 100%;
+}
+
+.main{
+    position:relative;
+    width:100%;
+    min-height: calc(100% - 200px);
+
+}
+
+.footer{
+    position: relative;
+    width:100%;
+    min-height: 50px;
+    background-color:#8c8c8c;
+}

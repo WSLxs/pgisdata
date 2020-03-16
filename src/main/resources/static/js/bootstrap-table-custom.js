@@ -23,7 +23,6 @@ function reloadTableFilters(tableName) {
 }
 
 
-
 /**
  * 清空当前表格的查询条件
  * @param gridName
@@ -35,6 +34,16 @@ function clearTableFilters(tableName) {
         }
     });
     $("#" + tableName).bootstrapTable("refresh", {pageNumber: 1});
+
+}
+
+
+function clearCharts(chartName) {
+    $(".table-filter").each(function () {
+        if ($(this).attr("type") != "hidden") {
+            $(this).val("");
+        }
+    });
 
 }
 

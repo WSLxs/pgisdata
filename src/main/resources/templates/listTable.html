@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="webjars/jquery/3.1.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="js/bootstrap-3.3.7-dist/css/bootstrap.css">
-    <script type="text/javascript" src="js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script src="js/jquery.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script type="text/javascript" src="js/bootstrap.js"></script>
     <link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
     <link rel="stylesheet" href="css/uniform.css" />
     <link rel="stylesheet" href="css/select2.css" />
@@ -13,17 +13,23 @@
     <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>-->
 
     <script src="js/bootstrap-table.js"></script>
+    <script src="js/tableExport.js"></script>
+    <script src="js/bootstrap-table-export.js"></script>
+
     <script src="js/bootstrap-table-zh-CN.js"></script>
     <script src="js/bootstrap-table-custom.js"></script>
     <link rel="stylesheet" href="css/bootstrap-table.css" />
     <script src="js/app.js"></script>
+
+
+
     <script>
         $(document).ready(function () {
             $('#tb').bootstrapTable({
                 url: '/getTcs',         //请求后台的URL（*）
                 method: 'post', //请求方式（*）
                 contentType: "application/x-www-form-urlencoded",//当请求方法为post的时候,必须要有！！！！
-                striped:'true',
+                striped:true,
                 pagination: true,  //是否显示分页（*）
                 paginationLoop: true,
                 paginationHAlign: 'right', //right, left
@@ -31,8 +37,8 @@
                 paginationDetailHAlign: 'left', //right, left
                 paginationPreText: ' 上一页',
                 paginationNextText: '下一页',
-                // showRefresh:'true',
-                // search:'true',
+                showRefresh:'true',
+                search:'true',
                 sortable: true,                     //是否启用排序
                 sortOrder: "asc",                   //排序方式
                 pageNumber: 1,//如果设置了分页，首页页码
@@ -42,6 +48,9 @@
                 sidePagination: "server",
                 dataField: 'content',
                 totalField: 'totalElements',
+                showExport: true,                     //是否显示导出
+                exportDataType: "basic",
+                exportTypes:['excel','xlsx'],
                 queryParams: function (params) {//自定义参数，这里的参数是传给后台的，我这是是分页用的
                     return {//这里的params是table提供的
                         cp: (params.offset/params.limit),//从数据库第几条记录开始
@@ -53,7 +62,7 @@
                 columns: [{
                     field: 'tcmc',
                     width: '15%',
-                    title: '图层名',
+                    title: '图层名1',
                     formatter:tableNameFormatter
                 }, {
                     field: 'dl',
@@ -104,13 +113,13 @@
             <div class="control-group">
                 <div class="controls-row">
                     <label class="control-label" style="width: 150px;">图层名:</label>
-                    <input type="text" id="tableName" class="table-filter" style="margin-left: 10px;margin-top: 10px;width: 20%;height: 30px"  placeholder="图层名" />
+                    <input type="text" id="tableName" class="table-filter" style="margin-left: 10px;margin-top: 10px;width: 20%;height: 30px" placeholder="图层名"/>
 
                     <label class="control-label" style="width: 150px;">图层信息:</label>
-                    <input type="text" id="searchContent" class="table-filter"  style="margin-left: 10px;margin-top: 10px;width: 20%;height: 30px"   placeholder="图层信息" />
+                    <input type="text" id="searchContent" class="table-filter" style="margin-left: 10px;margin-top: 10px;width: 20%;height: 30px" placeholder="图层信息"/>
                     <div class="pull-right" style="margin-right: 80px;margin-top:10px;">
-                        <input type="button"  value="搜索" onclick="reloadTableFilters('tb')" class="btn btn-primary">
-                        <input type="button"  value="重置" onclick="clearTableFilters('tb')" class="btn btn-inverse">
+                        <input type="button" value="搜索" onclick="reloadTableFilters('tb')" class="btn btn-primary">
+                        <input type="button" value="重置" onclick="clearTableFilters('tb')" class="btn btn-default">
                     </div>
                 </div>
 

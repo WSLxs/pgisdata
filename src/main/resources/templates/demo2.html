@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>宝安车载管理系统</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="./js/jquery.js"></script>
+    <link rel="stylesheet" href="./js/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <script type="text/javascript" src="./js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script src="./js/bootstrap-treeview.js"></script>
+    <link rel="stylesheet" href="./js/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css"/>
+    <script src="./js/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="./js/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <link rel="stylesheet" href="./css/demo2.css"/>
+    <link rel="stylesheet" href="./css/bootstrap-treeview.css"/>
+    <link rel="stylesheet" href="./font/iconfont.css"/>
+</head>
+<body>
+<div class="main">
+    <aside>
+        <div class="count">
+            <div class="count1">
+                <div class="day">
+                    <p>24小时</p>
+                    <p>477</p>
+                </div>
+            </div>
+            <div class="count2">
+                <div class="hour">
+                    <p>24小时</p>
+                    <p>477</p>
+                </div>
+                <div class="minute">
+                    <p>24小时</p>
+                    <p>477</p>
+                </div>
+            </div>
+        </div>
+        <div class="tree">
+            <div class="searchDiv">
+                <div class="searchInput">
+                    <input type="text" class="searchContent"/>
+                    <span class="glyphicon glyphicon-search searchIcon">
+                    </span>
+                    <span class="clearInput">+</span>
+                </div>
+                <div class="searchList">
+                    <ul></ul>
+                </div>
+
+            </div>
+
+            <div class="treeList">
+
+            </div>
+        </div>
+        <div class="carTable">
+            <div class="tableHeader">监控列表</div>
+            <div class="tableContent">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>车牌号</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </aside>
+    <section id="mapDiv">
+        <div class="loginBar">
+            <div class="funIconList">
+                <span class="glyphicon glyphicon-remove" title="清除"></span>
+                <span class="glyphicon glyphicon-zoom-in" title="放大"></span>
+                <span class="glyphicon glyphicon-zoom-out" title="缩小"></span>
+                <span class="iconfont icon-celiang" title="测距离"></span>
+                <span class="iconfont icon-mianji" title="测面积"></span>
+                <span class="glyphicon glyphicon-fullscreen" title="全图"></span>
+                <span class="iconfont icon-cheliangpengzhuang" title="区域越界车辆"></span>
+                <span class="iconfont icon-xiaotuziCduan-" title="车辆管理"></span>
+                <span class="glyphicon glyphicon-user" title="用户管理"></span>
+            </div>
+            <div class="userName">admin</div>
+            <div class="layout">退出</div>
+        </div>
+    </section>
+</div>
+
+</body>
+<script src="http://map.maplite.cn/api"></script>
+<script src="./js/demo2.js"></script>
+</html>
