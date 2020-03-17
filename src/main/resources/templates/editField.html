@@ -189,6 +189,9 @@
 
         function editItem() {
             var selectedItems = $("#tb").bootstrapTable("getSelections");
+            var choose = selectedItems[0];
+
+
             if (selectedItems.length > 0) {
                 $("#zdmc").val(selectedItems[0].zdmc);
                 $("#sxmc").val(selectedItems[0].sxmc);
@@ -198,6 +201,8 @@
                 $("#zdlx").val(selectedItems[0].zdlx);
                 $("#sfbx").val(selectedItems[0].sfbx);
                 $("#Id").val(selectedItems[0].id);
+
+
                 $("#myModal").modal();
             } else {
                 alert("请选择数据！");
